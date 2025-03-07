@@ -1,183 +1,148 @@
-{% comment %}
-  apple-style-navigation.liquid
-
-  This snippet creates an Apple-style navigation for Shopify that uses your store's data
-  - Uses main menu link list for primary navigation
-  - Uses additional link lists for dropdowns
-  - Dynamically generates dropdown menus based on your Shopify link lists
-{% endcomment %}
-
 <header class="bg-white shadow-sm relative">
   <!-- Top Navigation Bar -->
   <div class="w-full flex justify-between items-center px-4 py-3 border-b border-gray-200">
-    <!-- Store Logo -->
+    <!-- Apple Logo -->
     <a href="/" class="text-gray-900">
-      {% if settings.logo != blank %}
-        <img
-          width="250px"
-          height="100px"
-          src="{{ settings.logo | image_url: width: 250 }}"
-          alt="{{ shop.name }}"
-          class="h-64 w-24"
-        >
-      {% else %}
-        <span class="text-xl font-bold">{{ shop.name }}</span>
-      {% endif %}
+      {% render 'icon-apple' %}
     </a>
 
     <!-- Main Navigation -->
     <nav class="hidden md:flex">
-      {% for link in linklists['main-menu'].links %}
-        {% assign dropdown_handle = link.handle | append: '-dropdown' %}
-        {% assign has_dropdown = false %}
-        {% if linklists[dropdown_handle] != blank %}
-          {% assign has_dropdown = true %}
-        {% endif %}
+      <div class="group relative">
+        <a href="/collections/all" class="text-sm text-gray-700 hover:text-gray-900 px-4 py-2 inline-block">Store</a>
+        <!-- Store Dropdown -->
+        <div class="hidden group-hover:block absolute left-0 w-screen bg-white shadow-lg z-50" style="top: 100%;">
+          <div class="py-8 px-8 grid grid-cols-3 gap-8 max-w-7xl mx-auto">
+            <!-- Shop Column -->
+            <div>
+              <h3 class="text-gray-900 font-medium mb-4">Shop</h3>
+              <ul class="space-y-3">
+                <li>
+                  <a href="/collections/new-arrivals" class="text-gray-700 hover:text-gray-900">Shop the Latest</a>
+                </li>
+                <li><a href="/collections/mac" class="text-gray-700 hover:text-gray-900">Mac</a></li>
+                <li><a href="/collections/ipad" class="text-gray-700 hover:text-gray-900">iPad</a></li>
+                <li><a href="/collections/iphone" class="text-gray-700 hover:text-gray-900">iPhone</a></li>
+                <li><a href="/collections/apple-watch" class="text-gray-700 hover:text-gray-900">Apple Watch</a></li>
+                <li><a href="/collections/accessories" class="text-gray-700 hover:text-gray-900">Accessories</a></li>
+              </ul>
+            </div>
 
-        <div class="group relative">
-          <a href="{{ link.url }}" class="text-sm text-gray-700 hover:text-gray-900 px-4 py-2 inline-block">
-            {{- link.title -}}
-          </a>
+            <!-- Quick Links Column -->
+            <div>
+              <h3 class="text-gray-900 font-medium mb-4">Quick Links</h3>
+              <ul class="space-y-3">
+                <li><a href="/pages/find-a-store" class="text-gray-700 hover:text-gray-900">Find a Store</a></li>
+                <li><a href="/pages/order-status" class="text-gray-700 hover:text-gray-900">Order Status</a></li>
+                <li><a href="/pages/ways-to-buy" class="text-gray-700 hover:text-gray-900">Ways to Buy</a></li>
+                <li><a href="/pages/personal-setup" class="text-gray-700 hover:text-gray-900">Personal Setup</a></li>
+              </ul>
+            </div>
 
-          {% if has_dropdown %}
-            <div class="hidden group-hover:block absolute left-0 w-screen bg-white shadow-lg z-50" style="top: 100%;">
-              <div class="py-8 px-8 max-w-7xl mx-auto">
-                {% comment %}
-                  Check for the dropdown structure type - different structures for different sections
-                {% endcomment %}
-                {% if link.handle == 'store' %}
-                  <div class="grid grid-cols-3 gap-8">
-                    <!-- Shop Column -->
-                    <div>
-                      <h3 class="text-gray-900 font-medium mb-4">Shop</h3>
-                      <ul class="space-y-3">
-                        {% for childlink in linklists[dropdown_handle].links %}
-                          {% if childlink.handle contains 'shop-' %}
-                            <li>
-                              <a href="{{ childlink.url }}" class="text-gray-700 hover:text-gray-900">
-                                {{- childlink.title -}}
-                              </a>
-                            </li>
-                          {% endif %}
-                        {% endfor %}
-                      </ul>
-                    </div>
+            <!-- Shop Special Stores Column -->
+            <div>
+              <h3 class="text-gray-900 font-medium mb-4">Shop Special Stores</h3>
+              <ul class="space-y-3">
+                <li><a href="/pages/education" class="text-gray-700 hover:text-gray-900">Education</a></li>
+                <li><a href="/pages/business" class="text-gray-700 hover:text-gray-900">Business</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
 
-                    <!-- Quick Links Column -->
-                    <div>
-                      <h3 class="text-gray-900 font-medium mb-4">Quick Links</h3>
-                      <ul class="space-y-3">
-                        {% for childlink in linklists[dropdown_handle].links %}
-                          {% if childlink.handle contains 'quick-' %}
-                            <li>
-                              <a href="{{ childlink.url }}" class="text-gray-700 hover:text-gray-900">
-                                {{- childlink.title -}}
-                              </a>
-                            </li>
-                          {% endif %}
-                        {% endfor %}
-                      </ul>
-                    </div>
-
-                    <!-- Shop Special Stores Column -->
-                    <div>
-                      <h3 class="text-gray-900 font-medium mb-4">Shop Special Stores</h3>
-                      <ul class="space-y-3">
-                        {% for childlink in linklists[dropdown_handle].links %}
-                          {% if childlink.handle contains 'special-' %}
-                            <li>
-                              <a href="{{ childlink.url }}" class="text-gray-700 hover:text-gray-900">
-                                {{- childlink.title -}}
-                              </a>
-                            </li>
-                          {% endif %}
-                        {% endfor %}
-                      </ul>
-                    </div>
-                  </div>
-
-                {% elsif link.handle == 'mac' or link.handle == 'ipad' or link.handle == 'iphone' %}
-                  <div class="grid grid-cols-4 gap-6">
-                    {% comment %}
-                      Group links by their metadata (assumes using link_group metafield)
-                      If you don't have metafields, you can use tags or handle prefixes
-                    {% endcomment %}
-                    {% assign link_groups = '' | split: '' %}
-                    {% for childlink in linklists[dropdown_handle].links %}
-                      {% assign handle_parts = childlink.handle | split: '-' %}
-                      {% if handle_parts.size > 1 %}
-                        {% assign group_name = handle_parts | first %}
-                        {% unless link_groups contains group_name %}
-                          {% assign link_groups = link_groups | push: group_name %}
-                        {% endunless %}
-                      {% endif %}
-                    {% endfor %}
-
-                    {% for group in link_groups %}
-                      <div>
-                        <h3 class="text-gray-900 font-medium mb-4">{{ group | capitalize }}</h3>
-                        <ul class="space-y-3">
-                          {% for childlink in linklists[dropdown_handle].links %}
-                            {% if childlink.handle contains group %}
-                              <li>
-                                <a href="{{ childlink.url }}" class="text-gray-700 hover:text-gray-900">
-                                  {{- childlink.title -}}
-                                </a>
-                              </li>
-                            {% endif %}
-                          {% endfor %}
-                        </ul>
-                      </div>
-                    {% endfor %}
-
-                    {% comment %}
-                      If no groups were found, just display all links
-                    {% endcomment %}
-                    {% if link_groups.size == 0 %}
-                      <div>
-                        <ul class="space-y-3">
-                          {% for childlink in linklists[dropdown_handle].links %}
-                            <li>
-                              <a href="{{ childlink.url }}" class="text-gray-700 hover:text-gray-900">
-                                {{- childlink.title -}}
-                              </a>
-                            </li>
-                          {% endfor %}
-                        </ul>
-                      </div>
-                    {% endif %}
-                  </div>
-
-                {% else %}
-                  <!-- Default dropdown layout -->
-                  <ul class="grid grid-cols-3 gap-4">
-                    {% for childlink in linklists[dropdown_handle].links %}
-                      <li>
-                        <a href="{{ childlink.url }}" class="text-gray-700 hover:text-gray-900">
-                          {{- childlink.title -}}
-                        </a>
-                      </li>
-                    {% endfor %}
-                  </ul>
-                {% endif %}
+      <div class="group relative">
+        <a href="/collections/mac" class="text-sm text-gray-700 hover:text-gray-900 px-4 py-2 inline-block">Mac</a>
+        <!-- Mac Dropdown (simplified for example) -->
+        <div class="hidden group-hover:block absolute left-0 w-screen bg-white shadow-lg z-50" style="top: 100%;">
+          <div class="py-8 px-8 max-w-7xl mx-auto">
+            <div class="grid grid-cols-4 gap-6">
+              <div>
+                <h3 class="text-gray-900 font-medium mb-4">MacBook</h3>
+                <ul class="space-y-3">
+                  <li><a href="#" class="text-gray-700 hover:text-gray-900">MacBook Air</a></li>
+                  <li><a href="#" class="text-gray-700 hover:text-gray-900">MacBook Pro</a></li>
+                </ul>
+              </div>
+              <div>
+                <h3 class="text-gray-900 font-medium mb-4">Desktop</h3>
+                <ul class="space-y-3">
+                  <li><a href="#" class="text-gray-700 hover:text-gray-900">iMac</a></li>
+                  <li><a href="#" class="text-gray-700 hover:text-gray-900">Mac mini</a></li>
+                  <li><a href="#" class="text-gray-700 hover:text-gray-900">Mac Studio</a></li>
+                  <li><a href="#" class="text-gray-700 hover:text-gray-900">Mac Pro</a></li>
+                </ul>
+              </div>
+              <div>
+                <h3 class="text-gray-900 font-medium mb-4">Accessories</h3>
+                <ul class="space-y-3">
+                  <li><a href="#" class="text-gray-700 hover:text-gray-900">Displays</a></li>
+                  <li><a href="#" class="text-gray-700 hover:text-gray-900">Accessories</a></li>
+                </ul>
+              </div>
+              <div>
+                <h3 class="text-gray-900 font-medium mb-4">More</h3>
+                <ul class="space-y-3">
+                  <li><a href="#" class="text-gray-700 hover:text-gray-900">Compare Mac</a></li>
+                  <li><a href="#" class="text-gray-700 hover:text-gray-900">macOS</a></li>
+                </ul>
               </div>
             </div>
-          {% endif %}
+          </div>
         </div>
-      {% endfor %}
+      </div>
+
+      <div class="group relative">
+        <a href="/collections/ipad" class="text-sm text-gray-700 hover:text-gray-900 px-4 py-2 inline-block">iPad</a>
+        <!-- iPad Dropdown (similar structure) -->
+        <div class="hidden group-hover:block absolute left-0 w-screen bg-white shadow-lg z-50" style="top: 100%;">
+          <div class="py-8 px-8 max-w-7xl mx-auto">
+            <h3 class="text-gray-900 font-medium mb-4">iPad Models</h3>
+            <div class="grid grid-cols-4 gap-6">
+              <!-- iPad content here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="group relative">
+        <a href="/collections/iphone" class="text-sm text-gray-700 hover:text-gray-900 px-4 py-2 inline-block"
+          >iPhone</a
+        >
+        <!-- iPhone Dropdown -->
+        <div class="hidden group-hover:block absolute left-0 w-screen bg-white shadow-lg z-50" style="top: 100%;">
+          <div class="py-8 px-8 max-w-7xl mx-auto">
+            <h3 class="text-gray-900 font-medium mb-4">iPhone Models</h3>
+            <div class="grid grid-cols-4 gap-6">
+              <!-- iPhone content here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a href="/collections/watch" class="text-sm text-gray-700 hover:text-gray-900 px-4 py-2 inline-block">Watch</a>
+      <a href="/collections/airpods" class="text-sm text-gray-700 hover:text-gray-900 px-4 py-2 inline-block"
+        >AirPods</a
+      >
+      <a href="/collections/tv-home" class="text-sm text-gray-700 hover:text-gray-900 px-4 py-2 inline-block"
+        >TV & Home</a
+      >
+      <a href="/collections/entertainment" class="text-sm text-gray-700 hover:text-gray-900 px-4 py-2 inline-block"
+        >Entertainment</a
+      >
+      <a href="/collections/accessories" class="text-sm text-gray-700 hover:text-gray-900 px-4 py-2 inline-block"
+        >Accessories</a
+      >
+      <a href="/pages/support" class="text-sm text-gray-700 hover:text-gray-900 px-4 py-2 inline-block">Support</a>
     </nav>
 
     <!-- Search and Cart Icons -->
     <div class="flex items-center space-x-4">
       <a href="/search" class="text-gray-700 hover:text-gray-900">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M19.7071 18.2929L15.2071 13.7929C16.3924 12.3097 17.0024 10.4338 16.9999 8.5C16.9999 6.91775 16.5308 5.37104 15.6518 4.05544C14.7727 2.73985 13.5233 1.71447 12.0615 1.10896C10.5997 0.503466 8.99113 0.34504 7.43928 0.653721C5.88743 0.962403 4.46197 1.72433 3.34315 2.84315C2.22433 3.96197 1.4624 5.38743 1.15372 6.93928C0.84504 8.49113 1.00346 10.0997 1.60897 11.5615C2.21447 13.0233 3.23985 14.2727 4.55544 15.1518C5.87104 16.0308 7.41775 16.5 9 16.5C10.9338 16.5024 12.8097 15.8925 14.2929 14.7071L18.7929 19.2071C18.8834 19.2976 18.9914 19.3697 19.1104 19.4194C19.2294 19.4691 19.3571 19.4955 19.4857 19.4971C19.6144 19.4988 19.7427 19.4757 19.8629 19.4292C19.983 19.3826 20.0927 19.3134 20.1854 19.2254C20.278 19.1373 20.3524 19.0319 20.4038 18.9144C20.4553 18.797 20.4829 18.6701 20.485 18.5415C20.4872 18.4129 20.4639 18.2852 20.417 18.166C20.3701 18.0468 20.3007 17.9388 20.2121 17.8479L19.7071 18.2929ZM3 8.5C3 7.31331 3.35189 6.15327 4.01118 5.16658C4.67047 4.17989 5.60754 3.41085 6.7039 2.95673C7.80026 2.5026 9.00666 2.38378 10.1755 2.61529C11.3443 2.8468 12.4216 3.41825 13.2426 4.24264C14.0636 5.06702 14.6352 6.14433 14.8667 7.31311C15.0983 8.48189 14.9794 9.68829 14.5253 10.7846C14.0712 11.881 13.302 12.818 12.3154 13.4773C11.3288 14.1366 10.1687 14.4885 8.982 14.4885C7.38246 14.4865 5.84929 13.852 4.72903 12.7317C3.60878 11.6115 2.97425 10.0784 2.9722 8.4788L3 8.5Z" fill="currentColor"/>
-        </svg>
+        {% render 'icon-search' %}
       </a>
       <a href="/cart" class="text-gray-700 hover:text-gray-900 relative">
-        <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M17 5H13V4C13 2.93913 12.5786 1.92172 11.8284 1.17157C11.0783 0.421427 10.0609 0 9 0C7.93913 0 6.92172 0.421427 6.17157 1.17157C5.42143 1.92172 5 2.93913 5 4V5H1C0.734784 5 0.48043 5.10536 0.292893 5.29289C0.105357 5.48043 0 5.73478 0 6V17C0 17.7956 0.316071 18.5587 0.87868 19.1213C1.44129 19.6839 2.20435 20 3 20H15C15.7956 20 16.5587 19.6839 17.1213 19.1213C17.6839 18.5587 18 17.7956 18 17V6C18 5.73478 17.8946 5.48043 17.7071 5.29289C17.5196 5.10536 17.2652 5 17 5ZM7 4C7 3.46957 7.21071 2.96086 7.58579 2.58579C7.96086 2.21071 8.46957 2 9 2C9.53043 2 10.0391 2.21071 10.4142 2.58579C10.7893 2.96086 11 3.46957 11 4V5H7V4ZM16 17C16 17.2652 15.8946 17.5196 15.7071 17.7071C15.5196 17.8946 15.2652 18 15 18H3C2.73478 18 2.48043 17.8946 2.29289 17.7071C2.10536 17.5196 2 17.2652 2 17V7H4V8C4 8.26522 4.10536 8.51957 4.29289 8.70711C4.48043 8.89464 4.73478 9 5 9C5.26522 9 5.51957 8.89464 5.70711 8.70711C5.89464 8.51957 6 8.26522 6 8V7H12V8C12 8.26522 12.1054 8.51957 12.2929 8.70711C12.4804 8.89464 12.7348 9 13 9C13.2652 9 13.5196 8.89464 13.7071 8.70711C13.8946 8.51957 14 8.26522 14 8V7H16V17Z" fill="currentColor"/>
-        </svg>
+        {% render 'icon-bag' %}
         {% if cart.item_count > 0 %}
           <span class="absolute -top-2 -right-2 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
             {{- cart.item_count -}}
@@ -188,11 +153,8 @@
   </div>
 
   <!-- Mobile Menu Button (Hidden on desktop) -->
-  <div class="block md:hidden">
-    <button
-      class="mobile-menu-toggle text-gray-500 hover:text-gray-600 focus:outline-none focus:text-gray-600 p-4"
-      aria-label="toggle menu"
-    >
+  <div class="md:hidden">
+    <button class="text-gray-500 hover:text-gray-600 focus:outline-none focus:text-gray-600" aria-label="toggle menu">
       <svg viewBox="0 0 24 24" class="h-6 w-6 fill-current">
         <path fill-rule="evenodd" d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z"></path>
       </svg>
@@ -201,42 +163,33 @@
 </header>
 
 <!-- Mobile Navigation (Hidden on desktop) -->
-<div class="mobile-menu hidden md:hidden">
-  <div class="px-2 pt-2 pb-3 space-y-1">
-    {% for link in linklists['main-menu'].links %}
-      {% assign dropdown_handle = link.handle | append: '-dropdown' %}
-      {% assign has_dropdown = false %}
-      {% if linklists[dropdown_handle] != blank %}
-        {% assign has_dropdown = true %}
-      {% endif %}
-
-      <div class="mobile-link relative">
-        <a
-          href="{{ link.url }}"
-          class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md"
-        >
-          {{ link.title }}
-          {% if has_dropdown %}
-            <span class="mobile-arrow ml-2">▼</span>
-          {% endif %}
-        </a>
-
-        {% if has_dropdown %}
-          <div class="mobile-dropdown hidden pl-4 pb-2">
-            {% for childlink in linklists[dropdown_handle].links %}
-              <a
-                href="{{ childlink.url }}"
-                class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md"
-              >
-                {{ childlink.title }}
-              </a>
-            {% endfor %}
-          </div>
-        {% endif %}
-      </div>
-    {% endfor %}
-  </div>
+<div class="hidden md:hidden">
+  <!-- Mobile menu content here -->
 </div>
+
+<!-- Apple Icon Snippet (add to snippets/icon-apple.liquid) -->
+{% comment %}
+  Create a snippet file named icon-apple.liquid with the following SVG:
+  <svg width="20" height="24" viewBox="0 0 20 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13.3634 6.96C14.1264 6.96 15.1294 6.344 15.8064 5.528C16.4214 4.792 16.8614 3.752 16.8614 2.712C16.8614 2.552 16.8454 2.392 16.8134 2.264C15.8704 2.296 14.8034 2.936 14.0884 3.784C13.5054 4.44 12.9854 5.464 12.9854 6.52C12.9854 6.696 13.0174 6.872 13.0334 6.92C13.1134 6.936 13.2414 6.96 13.3634 6.96ZM10.6854 22.912C11.6764 22.912 12.1164 22.224 13.3954 22.224C14.6904 22.224 15.0024 22.896 16.1054 22.896C17.1764 22.896 17.9554 21.824 18.6824 20.768C19.5094 19.584 19.8534 18.432 19.8694 18.384C19.8054 18.368 17.4994 17.52 17.4994 14.784C17.4994 12.44 19.3414 11.528 19.4374 11.464C18.2704 9.752 16.5164 9.704 15.9804 9.704C14.7494 9.704 13.7104 10.456 13.0494 10.456C12.3404 10.456 11.3974 9.752 10.3424 9.752C8.3284 9.752 6.2664 11.48 6.2664 14.816C6.2664 16.816 6.9434 18.944 7.7864 20.352C8.5334 21.576 9.1804 22.912 10.6854 22.912Z" fill="currentColor"/>
+  </svg>
+{% endcomment %}
+
+<!-- Search Icon Snippet (add to snippets/icon-search.liquid) -->
+{% comment %}
+  Create a snippet file named icon-search.liquid with the following SVG:
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M19.7071 18.2929L15.2071 13.7929C16.3924 12.3097 17.0024 10.4338 16.9999 8.5C16.9999 6.91775 16.5308 5.37104 15.6518 4.05544C14.7727 2.73985 13.5233 1.71447 12.0615 1.10896C10.5997 0.503466 8.99113 0.34504 7.43928 0.653721C5.88743 0.962403 4.46197 1.72433 3.34315 2.84315C2.22433 3.96197 1.4624 5.38743 1.15372 6.93928C0.84504 8.49113 1.00346 10.0997 1.60897 11.5615C2.21447 13.0233 3.23985 14.2727 4.55544 15.1518C5.87104 16.0308 7.41775 16.5 9 16.5C10.9338 16.5024 12.8097 15.8925 14.2929 14.7071L18.7929 19.2071C18.8834 19.2976 18.9914 19.3697 19.1104 19.4194C19.2294 19.4691 19.3571 19.4955 19.4857 19.4971C19.6144 19.4988 19.7427 19.4757 19.8629 19.4292C19.983 19.3826 20.0927 19.3134 20.1854 19.2254C20.278 19.1373 20.3524 19.0319 20.4038 18.9144C20.4553 18.797 20.4829 18.6701 20.485 18.5415C20.4872 18.4129 20.4639 18.2852 20.417 18.166C20.3701 18.0468 20.3007 17.9388 20.2121 17.8479L19.7071 18.2929ZM3 8.5C3 7.31331 3.35189 6.15327 4.01118 5.16658C4.67047 4.17989 5.60754 3.41085 6.7039 2.95673C7.80026 2.5026 9.00666 2.38378 10.1755 2.61529C11.3443 2.8468 12.4216 3.41825 13.2426 4.24264C14.0636 5.06702 14.6352 6.14433 14.8667 7.31311C15.0983 8.48189 14.9794 9.68829 14.5253 10.7846C14.0712 11.881 13.302 12.818 12.3154 13.4773C11.3288 14.1366 10.1687 14.4885 8.982 14.4885C7.38246 14.4865 5.84929 13.852 4.72903 12.7317C3.60878 11.6115 2.97425 10.0784 2.9722 8.4788L3 8.5Z" fill="currentColor"/>
+  </svg>
+{% endcomment %}
+
+<!-- Cart/Bag Icon Snippet (add to snippets/icon-bag.liquid) -->
+{% comment %}
+  Create a snippet file named icon-bag.liquid with the following SVG:
+  <svg width="18" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17 5H13V4C13 2.93913 12.5786 1.92172 11.8284 1.17157C11.0783 0.421427 10.0609 0 9 0C7.93913 0 6.92172 0.421427 6.17157 1.17157C5.42143 1.92172 5 2.93913 5 4V5H1C0.734784 5 0.48043 5.10536 0.292893 5.29289C0.105357 5.48043 0 5.73478 0 6V17C0 17.7956 0.316071 18.5587 0.87868 19.1213C1.44129 19.6839 2.20435 20 3 20H15C15.7956 20 16.5587 19.6839 17.1213 19.1213C17.6839 18.5587 18 17.7956 18 17V6C18 5.73478 17.8946 5.48043 17.7071 5.29289C17.5196 5.10536 17.2652 5 17 5ZM7 4C7 3.46957 7.21071 2.96086 7.58579 2.58579C7.96086 2.21071 8.46957 2 9 2C9.53043 2 10.0391 2.21071 10.4142 2.58579C10.7893 2.96086 11 3.46957 11 4V5H7V4ZM16 17C16 17.2652 15.8946 17.5196 15.7071 17.7071C15.5196 17.8946 15.2652 18 15 18H3C2.73478 18 2.48043 17.8946 2.29289 17.7071C2.10536 17.5196 2 17.2652 2 17V7H4V8C4 8.26522 4.10536 8.51957 4.29289 8.70711C4.48043 8.89464 4.73478 9 5 9C5.26522 9 5.51957 8.89464 5.70711 8.70711C5.89464 8.51957 6 8.26522 6 8V7H12V8C12 8.26522 12.1054 8.51957 12.2929 8.70711C12.4804 8.89464 12.7348 9 13 9C13.2652 9 13.5196 8.89464 13.7071 8.70711C13.8946 8.51957 14 8.26522 14 8V7H16V17Z" fill="currentColor"/>
+  </svg>
+{% endcomment %}
 
 <!-- CSS to ensure hover works correctly even with small gaps -->
 <style>
@@ -256,33 +209,3 @@
     background: transparent;
   }
 </style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Mobile menu toggle
-    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-    const mobileMenu = document.querySelector('.mobile-menu');
-
-    if (mobileMenuToggle && mobileMenu) {
-      mobileMenuToggle.addEventListener('click', function () {
-        mobileMenu.classList.toggle('hidden');
-      });
-    }
-
-    // Mobile dropdown toggles
-    const mobileLinks = document.querySelectorAll('.mobile-link');
-
-    mobileLinks.forEach((link) => {
-      const arrow = link.querySelector('.mobile-arrow');
-      const dropdown = link.querySelector('.mobile-dropdown');
-
-      if (arrow && dropdown) {
-        arrow.addEventListener('click', function (e) {
-          e.preventDefault();
-          dropdown.classList.toggle('hidden');
-          arrow.textContent = dropdown.classList.contains('hidden') ? '▼' : '▲';
-        });
-      }
-    });
-  });
-</script>
