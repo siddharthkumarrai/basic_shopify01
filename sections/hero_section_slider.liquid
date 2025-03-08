@@ -1,6 +1,6 @@
 {% schema %}
 {
-  "name": "Hero Section",
+  "name": "Hero Slider",
   "settings": [
     {
       "type": "image_picker",
@@ -9,9 +9,15 @@
     },
     {
       "type": "text",
-      "id": "slide_1_text",
-      "label": "Slide 1 Text",
-      "default": "Discover Your Style"
+      "id": "slide_1_heading",
+      "label": "Slide 1 Heading",
+      "default": "Welcome to Our Store"
+    },
+    {
+      "type": "text",
+      "id": "slide_1_subtext",
+      "label": "Slide 1 Subtext",
+      "default": "Discover amazing products here!"
     },
     {
       "type": "image_picker",
@@ -20,81 +26,77 @@
     },
     {
       "type": "text",
-      "id": "slide_2_text",
-      "label": "Slide 2 Text",
-      "default": "Latest Trends for You"
-    },
-    {
-      "type": "image_picker",
-      "id": "slide_3",
-      "label": "Slide 3 Image"
+      "id": "slide_2_heading",
+      "label": "Slide 2 Heading",
+      "default": "Limited Time Offer"
     },
     {
       "type": "text",
-      "id": "slide_3_text",
-      "label": "Slide 3 Text",
-      "default": "Shop Now"
+      "id": "slide_2_subtext",
+      "label": "Slide 2 Subtext",
+      "default": "Get the best deals today!"
     }
   ],
   "presets": [
     {
-      "name": "Hero Section",
-      "category": "Image"
+      "name": "Hero Slider"
     }
   ]
 }
 {% endschema %}
 
-<div class="hero-slider">
-  <div class="slide" style="background-image: url({{ section.settings.slide_1 | image_url: 'master' }});">
-    <h2>{{ section.settings.slide_1_text }}</h2>
+<section class="relative w-full overflow-hidden">
+  <div class="flex transition-transform duration-700 ease-in-out" id="slider">
+    <div class="w-full flex-none" id="slide1">
+      <div
+        class="relative w-full h-screen flex items-center justify-center bg-cover bg-center"
+        style="background-image: url('{{ section.settings.slide_1 | img_url: '1920x1080' }}');"
+      >
+        <div class="text-center text-white bg-black bg-opacity-50 p-6 rounded-lg">
+          <h2 class="text-4xl font-bold">{{ section.settings.slide_1_heading }}</h2>
+          <p class="text-lg mt-2">{{ section.settings.slide_1_subtext }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="w-full flex-none" id="slide2">
+      <div
+        class="relative w-full h-screen flex items-center justify-center bg-cover bg-center"
+        style="background-image: url('{{ section.settings.slide_2 | img_url: '1920x1080' }}');"
+      >
+        <div class="text-center text-white bg-black bg-opacity-50 p-6 rounded-lg">
+          <h2 class="text-4xl font-bold">{{ section.settings.slide_2_heading }}</h2>
+          <p class="text-lg mt-2">{{ section.settings.slide_2_subtext }}</p>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="slide" style="background-image: url({{ section.settings.slide_2 | image_url: 'master' }});">
-    <h2>{{ section.settings.slide_2_text }}</h2>
-  </div>
-  <div class="slide" style="background-image: url({{ section.settings.slide_3 | image_url: 'master' }});">
-    <h2>{{ section.settings.slide_3_text }}</h2>
-  </div>
-</div>
 
-<style>
-  .hero-slider {
-    width: 100%;
-    height: 500px;
-    position: relative;
-    overflow: hidden;
-  }
-  .slide {
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    position: absolute;
-    top: 0;
-    left: 100%;
-    transition: left 1s ease-in-out;
-  }
-  .slide.active {
-    left: 0;
-  }
-</style>
+  <button
+    class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-3 rounded-full"
+    onclick="prevSlide()"
+  >
+    ❮
+  </button>
+  <button
+    class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-3 rounded-full"
+    onclick="nextSlide()"
+  >
+    ❯
+  </button>
+</section>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    let slides = document.querySelectorAll('.slide');
-    let index = 0;
-
-    function showSlide() {
-      slides.forEach((slide, i) => {
-        slide.classList.remove('active');
-        slide.style.left = '100%';
-      });
-      slides[index].classList.add('active');
-      slides[index].style.left = '0';
-      index = (index + 1) % slides.length;
-    }
-
-    setInterval(showSlide, 3000);
-    showSlide();
-  });
+  let currentIndex = 0;
+  const slides = document.querySelectorAll('#slider > div');
+  function updateSlider() {
+    document.querySelector('#slider').style.transform = `translateX(-${currentIndex * 100}%)`;
+  }
+  function prevSlide() {
+    currentIndex = currentIndex === 0 ? slides.length - 1 : currentIndex - 1;
+    updateSlider();
+  }
+  function nextSlide() {
+    currentIndex = currentIndex === slides.length - 1 ? 0 : currentIndex + 1;
+    updateSlider();
+  }
 </script>
