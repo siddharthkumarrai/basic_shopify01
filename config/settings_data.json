@@ -1,6 +1,71 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
-  "current": "Default",
+  "current": {
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {}
+      },
+      "hero_section_slider": {
+        "type": "hero_section_slider",
+        "blocks": {
+          "slide_MzQxxg": {
+            "type": "slide",
+            "settings": {
+              "title": "iPhone 16",
+              "subtitle": "128GB, Special Offer",
+              "button_link": "",
+              "button_text": "Shop Now"
+            }
+          },
+          "slide_pHiLay": {
+            "type": "slide",
+            "settings": {
+              "title": "iPhone 16",
+              "subtitle": "128GB, Special Offer",
+              "button_link": "",
+              "button_text": "Shop Now"
+            }
+          },
+          "slide_JQNQKr": {
+            "type": "slide",
+            "settings": {
+              "title": "iPhone 16",
+              "subtitle": "128GB, Special Offer",
+              "button_link": "",
+              "button_text": "Shop Now"
+            }
+          },
+          "slide_zTyNbN": {
+            "type": "slide",
+            "settings": {
+              "title": "iPhone 16",
+              "subtitle": "128GB, Special Offer",
+              "button_link": "",
+              "button_text": "Shop Now"
+            }
+          }
+        },
+        "block_order": [
+          "slide_MzQxxg",
+          "slide_pHiLay",
+          "slide_JQNQKr",
+          "slide_zTyNbN"
+        ],
+        "settings": {}
+      }
+    },
+    "content_for_index": []
+  },
   "presets": {
-    "Default": { }
+    "Default": {}
   }
 }
