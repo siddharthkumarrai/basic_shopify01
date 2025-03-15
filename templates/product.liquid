@@ -1,29 +1,14 @@
-{% assign current_variant = product.selected_or_first_available_variant %}
-{% assign featured_image = current_variant.featured_image | default: product.featured_image %}
-<img src="{{ featured_image | img_url: 'large' }}" alt="{{ featured_image.alt | escape }}" id="ProductPhotoImg">
-{% for image in product.images %}
-  <a href="{{ image.src | img_url: 'large' }}">
-    <img src="{{ image.src | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
-  </a>
-{% endfor %}
+<img src="{{ product.featured_image | image_url }}" height="300px" width="300px">
 <h1>{{ product.title }}</h1>
-<form action="/cart/add" method="post" enctype="multipart/form-data" id="AddToCartForm">
-  <select name="id" id="productSelect">
+<h1>{{ product.price | money }}</h1>
+<p>{{ product.description }}</p>
+
+{% form 'product', product %}
+  <select class="border-0 border-b-amber-600" name="id">
     {% for variant in product.variants %}
-      {% if variant.available %}
-        <option value="{{ variant.id }}">
-          {{ variant.title }} - {{ variant.price | money_with_currency }}
-        </option>
-      {% else %}
-        <option disabled="disabled">
-          {{ variant.title }} - sold out
-        </option>
-      {% endif %}
+      <option value="{{ variant.id }}">{{ variant.title }}</option>
     {% endfor %}
   </select>
-  {{ current_variant.price | money }}
-  <label for="Quantity">quantity</label>
-  <input type="number" id="Quantity" name="quantity" value="1" min="1">
-  <button type="submit" name="add" id="AddToCart">Add to cart</button>
-</form>
-<div>{{ product.description }}</div>
+
+  <button class="cursor-pointer border-2 border-b-black px-3 py-2 rounded-xl" type="submit">Add to cart</button>
+{% endform %}

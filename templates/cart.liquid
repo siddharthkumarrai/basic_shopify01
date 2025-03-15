@@ -1,46 +1,27 @@
-{% if cart.item_count > 0 %}
-  <h1>cart</h1>
-  <form action="/cart" method="post" novalidate>
-    <table>
-      <thead>
-        <th colspan="2">Prod</th>
-        <th>Price</th>
-        <th>Qty</th>
-        <th>total</th>
-      </thead>
-      <tbody>
-        {% for item in cart.items %}
-          <tr>
-            <td>
-              <a href="{{ item.url | within: collections.all }}">
-                <img src="{{ item | img_url: 'medium' }}" alt="{{ item.title | escape }}">
-              </a>
-            </td>
-            <td>
-              <a href="{{ item.url }}">{{ item.product.title }}</a>
-              {{ item.variant.title }}
-              <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0">remove</a>
-            </td>
-            <td>{{ item.price | money }}</td>
-            <td>
-              <input type="number" name="updates[]" id="updates_{{ item.key }}" value="{{ item.quantity }}" min="0">
-            </td>
-            <td>
-              {% if item.original_line_price != item.line_price %}{{ item.original_line_price | money }}{% endif %}
-              {{ item.line_price | money }}
-              {% for discount in item.discounts %}{{ discount.title }}{% endfor %}
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <div>
-      <p>sub total : {{ cart.total_price | money }}</p>
-      <button type="submit" name="update">Update</button>
-      <button type="submit" name="checkout">Checkout</button>
-    </div>
-  </form>
-{% else %}
-  <h2>cart</h2>
-  Cart is empty
-{% endif %}
+{% form 'cart', cart %}
+  <h1>Cart</h1>
+
+  {% if cart.empty? %}
+    <p>Cart is empty.</p>
+  {% else %}
+    {% for item in cart.items %}
+      <div>
+        <img src="{{ item.image | image_url: width:250  }}" height="300px" width="300px">
+        <h2>{{ item.title }}</h2>
+        <h1>{{ item.final_line_price | money }}</h1>
+        <input name="updates[]" , value="{{ item.quantity }}">
+        <a href="{{ item.url_to_remove }}">Remove</a>
+      </div>
+    {% endfor %}
+    <button class="border-2 rounded-xl border-b-black px-4 py-2.5 cursor-pointer" type="submit" name="update">
+      updates
+    </button>
+
+    <br>
+    <hr>
+    <h3>Total Price : {{ cart.total_price | money }}</h3>
+    <button class="border-2 rounded-xl border-b-black px-4 py-2.5 cursor-pointer" type="submit" name="checkout">
+      checkout
+    </button>
+  {% endif %}
+{% endform %}
